@@ -1,0 +1,41 @@
+#ifndef NETWORKING_HANDLER_H
+#define NETWORKING_HANDLER_H
+
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
+#endif
+
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
+#define ISVALIDSOCKET(s) ((s) != INVALID_SOCKET)
+#define CLOSESOCKET(s) closesocket(s)
+#define GETSOCKETERRNO() (WSAGetLastError())
+
+#include <conio.h>
+#include <windows.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <assert.h>
+#include <stdint.h>
+#define max_memory 10240000
+
+
+#ifdef __cpluscplus
+extern "C" {
+#endif
+
+SOCKET make_connection(char *port);
+void send_data(SOCKET socket_client,void *buf,uint64_t size);
+void send_file(SOCKET socket_client);
+void resume_file_send(SOCKET socket_client);
+
+#ifdef __cpluscplus
+}
+
+#endif
+
+#endif	// Networking_Handler_h
