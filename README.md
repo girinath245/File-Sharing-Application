@@ -18,4 +18,4 @@ Feautures like resume and reading the file in smaller chunks to reduce is also b
 2. To send a file from system A to B (A -> B), we just need to run the sender on A and wait for the recieving client on B to connect to us . 
 3. Then enter the location of the relative or absolute path of the file and wait .
 4. After it has finished sending it will tell you about the total bytes sent . 
-5. Note - The system B needs to know the unique ip and port of system A in order to connect which can be communicated earlier. 
+5.  Note - The system B needs to know the unique ip and port of system A in order to connect which can be communicated earlier. 
