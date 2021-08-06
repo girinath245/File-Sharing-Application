@@ -30,6 +30,7 @@ extern "C" {
 
 SOCKET make_connection(char *port);
 void send_data(SOCKET socket_client,void *buf,uint64_t size);
+void recieve_data(SOCKET socket_peer,void *read,uint64_t size);
 void send_file(SOCKET socket_client);
 void resume_file_send(SOCKET socket_client);
 

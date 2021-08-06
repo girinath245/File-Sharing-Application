@@ -90,8 +90,9 @@ void resume_file_send(SOCKET socket_client){
 void send_file(SOCKET socket_client){
 
 	printf("Enter the file path \n");
-	char path[100];
+	char path[120];
 	assert(scanf("%[^\n]s",path));
+	printf("%s" , path);
 	FILE *streamIn = fopen(path, "rb");
 		if (streamIn == (FILE *)0) {
 			printf("File opening error ocurred. Exiting program.\n");
@@ -113,3 +114,19 @@ void send_file(SOCKET socket_client){
 	free(buf);
 	fclose(streamIn);
 }
+
+void recieve_data(SOCKET socket_peer,void *read,uint64_t size) {
+ 		
+ 		uint64_t total_recieved=0;
+ 		uint64_t total_needed=size-total_recieved;
+
+ 		while(total_needed>0) {												 
+
+	 		uint64_t bytes_recieved=recv(socket_peer,(char *)read+total_recieved,total_needed,0);
+	 		if (bytes_recieved<1) break;
+	 																				
+	 		total_recieved+= bytes_recieved;
+	 		total_needed=size-total_recieved;
+
+    	} 
+	}

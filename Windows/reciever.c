@@ -9,16 +9,16 @@ int main(int argc, char *argv[]) {
     }
 
     if (argc < 4) {
-        fprintf(stderr, "usage: reciever hostname[ip] port filename.filetype \n");
+        fprintf(stderr, "usage: reciever hostname[ip] port filename.filetype download_preference \n");
         return 1;
     }
     
     SOCKET socket_peer = make_connection(argv[1] ,argv[2]);
 
-    int8_t flag=0;
-    send_data(socket_peer,&flag,sizeof(int8_t));
+    int flag = 0;
+    send_data(socket_peer,&flag,sizeof(flag));
 
-    switch(flag){
+    switch(flag) {
         case 0:
             recieve_file(socket_peer,argv[3]);
             break;

@@ -25,8 +25,8 @@ int main() {
     getnameinfo((struct sockaddr*)&client_address,client_len, address_buffer, sizeof(address_buffer), 0, 0,NI_NUMERICHOST);
     printf("%s\n", address_buffer);
 
-    int8_t flag = 0;
-    recieve_data(socket_client,&flag,sizeof(int8_t));
+    int flag = 0;
+    recieve_data(socket_client,&flag,sizeof(int));
 
     switch(flag){
         case 0:
