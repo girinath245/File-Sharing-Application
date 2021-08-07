@@ -1,2 +1,5 @@
-sender.exe
-recieve.exe
+*.exe
+*.mp4
+*.jpg
+*.jpeg
+.vscode

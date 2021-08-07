@@ -29,9 +29,9 @@ extern "C" {
 
 SOCKET make_connection(char *ip,char *port);
 void recieve_data(SOCKET socket_peer,void *read,uint64_t size);
-void recieve_file(SOCKET socket_peer,char filename[100]);
+void recieve_file(SOCKET socket_peer);
 void send_data(SOCKET socket_client,void *buf,uint64_t size);
-void resume_download(SOCKET socket_peer,char filename[100]);
+void resume_download(SOCKET socket_peer,char filename[120]);
 
 #ifdef __cpluscplus
 }

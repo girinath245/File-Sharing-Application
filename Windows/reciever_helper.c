@@ -73,8 +73,11 @@ void download_file(SOCKET socket_peer,void *read,int size,FILE *fo) {
     	}
 }
 
-void recieve_file(SOCKET socket_peer,char filename[100]) {
+void recieve_file(SOCKET socket_peer) {
 		
+		char filename[120];
+		recieve_data(socket_peer,filename,sizeof(filename));
+
 		uint64_t expected_size=0;
 		recieve_data(socket_peer,&expected_size,sizeof(uint64_t));
 		
@@ -108,11 +111,12 @@ void send_data(SOCKET socket_peer,void *buf,uint64_t size) {
 	}
 }
 
-void resume_download(SOCKET socket_peer,char filename[100]) {
+void resume_download(SOCKET socket_peer,char filename[120]) {
 
 	char *read = (char *)malloc(max_memory);
  	FILE *fo = fopen(filename,"ab");
-
+	
+	send_data(socket_peer,filename,100);
 	fseek(fo, 0, SEEK_END);
 	uint64_t actual_file_size = ftell(fo);
 
@@ -126,8 +130,7 @@ void resume_download(SOCKET socket_peer,char filename[100]) {
 	actual_file_size = ftell(fo); 
 	fseek(fo, 0, SEEK_SET);
 
-	if (actual_file_size==expected_size)	printf("The size of the file recieved is %I64d bytes.\n",expected_size);
-	else printf("Error\n");
+	printf("The size of the file [%s] recieved is %I64d bytes.\n",filename,expected_size);
 		
 	fclose(fo);
 	free(read);

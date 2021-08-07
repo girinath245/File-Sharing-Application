@@ -9,21 +9,24 @@ int main(int argc, char *argv[]) {
     }
 
     if (argc < 4) {
-        fprintf(stderr, "usage: reciever hostname[ip] port filename.filetype download_preference \n");
+        fprintf(stderr, "usage: reciever hostname[ip] port download_preference \n");
         return 1;
     }
     
     SOCKET socket_peer = make_connection(argv[1] ,argv[2]);
-
     int flag = 0;
+    if (argc == 4) flag = atoi(argv[3]);
     send_data(socket_peer,&flag,sizeof(flag));
 
     switch(flag) {
         case 0:
-            recieve_file(socket_peer,argv[3]);
+            recieve_file(socket_peer);
             break;
         case 1:
-            resume_download(socket_peer,argv[3]);
+            printf("Enter the file path \n");
+	        char path[120];
+	        assert(scanf("%[^\n]s",path));
+            resume_download(socket_peer,path);
             break;
     }
 

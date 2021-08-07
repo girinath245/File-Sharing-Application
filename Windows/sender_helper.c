@@ -59,6 +59,8 @@ void resume_file_send(SOCKET socket_client) {
 	
 	char path[100];
 	recieve_data(socket_client,path,sizeof(path));
+	printf("%s \n",path);
+
 	FILE* streamIn = fopen(path, "rb");
 	if (streamIn == (FILE *)0) {
 	    printf("File opening error ocurred. Exiting program.\n");
@@ -93,6 +95,9 @@ void send_file(SOCKET socket_client) {
 	char path[120];
 	assert(scanf("%[^\n]s",path));
 	printf("%s" , path);
+
+	send_data(socket_client,path,sizeof(path));
+
 	FILE *streamIn = fopen(path, "rb");
 		if (streamIn == (FILE *)0) {
 			printf("File opening error ocurred. Exiting program.\n");
