@@ -12,7 +12,6 @@
 #define CLOSESOCKET(s) closesocket(s)
 #define GETSOCKETERRNO() (WSAGetLastError())
 
-#include <conio.h>
 #include <windows.h>
 
 #include <stdlib.h>

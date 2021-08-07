@@ -1,6 +1,6 @@
 #include "sender.h" 
 
-SOCKET make_connection(char *port){
+SOCKET make_connection(char *port) {
     
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
@@ -40,7 +40,7 @@ SOCKET make_connection(char *port){
     return socket_listen;
 }
 
-void send_data(SOCKET socket_client,void *buf,uint64_t size){
+void send_data(SOCKET socket_client,void *buf,uint64_t size) {
 	unsigned char * now=(unsigned char *)buf;
 
 	uint64_t size_left_to_be_sent=size;
@@ -55,25 +55,25 @@ void send_data(SOCKET socket_client,void *buf,uint64_t size){
 	}
 }
 
-void resume_file_send(SOCKET socket_client){
-	uint64_t position = 0L;
-	recieve_data(socket_client,&position,sizeof(uint64_t));
-
-	printf("Enter the file path \n");
+void resume_file_send(SOCKET socket_client) {
+	
 	char path[100];
-	assert(scanf("%[^\n]s",path));
-	FILE *streamIn = fopen(path, "rb");
+	recieve_data(socket_client,path,sizeof(path));
+	FILE* streamIn = fopen(path, "rb");
 	if (streamIn == (FILE *)0) {
 	    printf("File opening error ocurred. Exiting program.\n");
 	    exit(0);
 	}
+
+	uint64_t position = 0L;
+	recieve_data(socket_client,&position,sizeof(uint64_t));
 
 	fseek(streamIn, 0, SEEK_END);
 	uint64_t size_of_file = ftell(streamIn); 
 	fseek(streamIn, 0, SEEK_SET);
 
 	fseek(streamIn,position,SEEK_SET);
-	size_of_file-= position;
+	size_of_file -= position;
 
 	send_data(socket_client,&size_of_file,sizeof(uint64_t));
 	printf("The size of the file which will be sent is %I64d bytes.\n",size_of_file);
@@ -87,7 +87,7 @@ void resume_file_send(SOCKET socket_client){
 	fclose(streamIn);
 }
 
-void send_file(SOCKET socket_client){
+void send_file(SOCKET socket_client) {
 
 	printf("Enter the file path \n");
 	char path[120];
@@ -115,14 +115,14 @@ void send_file(SOCKET socket_client){
 	fclose(streamIn);
 }
 
-void recieve_data(SOCKET socket_peer,void *read,uint64_t size) {
+void recieve_data(SOCKET socket_client,void *read,uint64_t size) {
  		
  		uint64_t total_recieved=0;
  		uint64_t total_needed=size-total_recieved;
 
  		while(total_needed>0) {												 
 
-	 		uint64_t bytes_recieved=recv(socket_peer,(char *)read+total_recieved,total_needed,0);
+	 		uint64_t bytes_recieved=recv(socket_client,(char *)read+total_recieved,total_needed,0);
 	 		if (bytes_recieved<1) break;
 	 																				
 	 		total_recieved+= bytes_recieved;
