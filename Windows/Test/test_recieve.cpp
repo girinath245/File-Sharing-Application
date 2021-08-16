@@ -14,11 +14,9 @@ int main(int argc, char *argv[]) {
     
     SOCKET socket_peer = make_connection(argv[1] ,argv[2]);
     
-    auto ans = recieve_data(socket_peer,'c');
+    auto ans = recieve_data(socket_peer,(uint64_t)120);
     
-    for (auto a : ans) {
-        cout << a << endl;
-    }
+    cout << ans.get() << endl;
  
     return 0;
 }

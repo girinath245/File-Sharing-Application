@@ -33,14 +33,16 @@ void send_data(SOCKET socket,const void *buf,uint64_t size) {
 }
 
 string recieve_data(SOCKET socket) {
-	auto _size_ = *((uint64_t *)recieve_data(socket,sizeof(uint64_t)));
+	uint64_t _size_ = 0;
+	recieve_data(socket,&_size_,sizeof(uint64_t));
 
-	string s((char *)recieve_data(socket,_size_));			  						
+	string s((char *)(recieve_data(socket,_size_).get()));			  						
 	return s;
 }
 
-vector<string> recieve_data(SOCKET socket,char identifier) {
-	auto _vector_size_ = *((uint64_t *)recieve_data(socket,sizeof(uint64_t)));			// send the vector size()
+vector<string> recieve_vector_data(SOCKET socket) {
+	auto _vector_size_ = 0;
+	recieve_data(socket,&_vector_size_,sizeof(uint64_t));			// send the vector size()
 
 	vector<string> result(_vector_size_);
 
@@ -51,15 +53,15 @@ vector<string> recieve_data(SOCKET socket,char identifier) {
 
 
 // The api has changed now recieve_data returns a const pointer to the data 
-const void* recieve_data(SOCKET socket,uint64_t size) {	
+unique_ptr<const char[]> recieve_data(SOCKET socket,uint64_t size) {	
 	
 	uint64_t total_recieved = 0;
 	uint64_t total_needed = size;
 
-	char* read = (char *) malloc(size);
+	auto read = std::make_unique<char[]>(size);
 
-	while(total_needed>0) {												 
-		uint64_t bytes_recieved = recv(socket,(char *)read+total_recieved,total_needed,0);
+	while(total_needed > 0) {												 
+		uint64_t bytes_recieved = recv(socket,read.get()+total_recieved,total_needed,0);
 		if (bytes_recieved<1) break;
 																				
 		total_recieved += bytes_recieved;

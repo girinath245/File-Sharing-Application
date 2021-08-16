@@ -27,12 +27,9 @@ int main()
          
     // Your code 
 
-    vector<string> vec;
-    vec.push_back("giri nath");
-    vec.push_back("sarnavo sarkar");
-    vec.push_back("ayush pattnayak");
+    char a[120] = "Hey giri this is me !!!! ???";
 
-    send_data(socket_client,vec);
+    send_data(socket_client,a,120);
     
     return 0;
 }
