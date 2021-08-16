@@ -37,7 +37,7 @@ void send_data(SOCKET socket,const vector<int> &vec);
 // the caller and the vendor both know the sizes 
 
 void recieve_data(SOCKET socket,void *read,uint64_t size);                     // 1                            
-unique_ptr<const char[]> recieve_data(SOCKET socket,uint64_t size);              // 2
+unique_ptr<const char[]> recieve_data(SOCKET socket,uint64_t size);            // 2
 string recieve_data(SOCKET socket);                                            // 3
 vector<string> recieve_vector_data(SOCKET socket);                             // 4     
 

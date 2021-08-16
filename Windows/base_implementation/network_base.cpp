@@ -51,7 +51,6 @@ vector<string> recieve_vector_data(SOCKET socket) {
 	return result;
 }
 
-
 // The api has changed now recieve_data returns a const pointer to the data 
 unique_ptr<const char[]> recieve_data(SOCKET socket,uint64_t size) {	
 	

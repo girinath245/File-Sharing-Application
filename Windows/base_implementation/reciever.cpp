@@ -91,7 +91,8 @@ void resume_download(SOCKET socket_peer,const string& filename) {
 
 	send_data(socket_peer,&actual_file_size,sizeof(actual_file_size));
 
-	auto expected_size = *(uint64_t *)recieve_data(socket_peer,sizeof(uint64_t));
+	uint64_t expected_size = 0;
+	recieve_data(socket_peer,&expected_size,sizeof(uint64_t));
 		
  	download_file(socket_peer,read,expected_size,fo);
 
