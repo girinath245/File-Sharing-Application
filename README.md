@@ -9,9 +9,11 @@ This application was created by making a few changes to the chat application whi
 The application was originally implemented in C. But after certain features were needed like some Object Oriented Capabilities it transitioned to C++. 
 
 ## Features
-
-Feautures like resume and reading the file in smaller chunks to reduce is also being added and tested.
-
+1. Resume Capability
+2. Reduced memory usage 
+3. Multi File Handling Capability
+4. Multi Client Handling Capability 
+  
 ## Using the Application 
 
 1. Just clone the repository and then move to directory of your OS and in that directory use python compile file to compile the program.
