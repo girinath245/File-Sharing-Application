@@ -6,7 +6,7 @@ This application was created by making a few changes to the chat application whi
 
 ## Languages and Technologies
 
-The application mostly uses C but can be easily integrated with C++ and built accordingly. 
+The application was originally implemented in C language . But after certain features were needed like some Object Oriented Capabilities it transitioned to C++. 
 
 ## Features
 
