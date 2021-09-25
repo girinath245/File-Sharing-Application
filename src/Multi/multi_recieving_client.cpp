@@ -1,4 +1,4 @@
-#include "../base_implementation/network_base.h"
+#include "../base_implementation/reciever.h"
 
 int main(int argc, char *argv[]) {
     WSADATA d;
@@ -14,10 +14,12 @@ int main(int argc, char *argv[]) {
     
     SOCKET socket_peer = make_connection(argv[1] ,argv[2]);
 
-    
+    auto file_list = recieve_vector_data(socket_peer);
 
+    for (auto &v : file_list) cout << v << endl;
 
-
+    closesocket(socket_peer);
+    WSACleanup();
 
     return 0;
 }

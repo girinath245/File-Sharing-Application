@@ -36,7 +36,7 @@ string recieve_data(SOCKET socket) {
 	uint64_t _size_ = 0;
 	recieve_data(socket,&_size_,sizeof(uint64_t));
 
-	string s((char *)(recieve_data(socket,_size_).get()));			  						
+	string s((recieve_data(socket,_size_).get()));			  						
 	return s;
 }
 
@@ -52,12 +52,12 @@ vector<string> recieve_vector_data(SOCKET socket) {
 }
 
 // The api has changed now recieve_data returns a const pointer to the data 
-unique_ptr<const char[]> recieve_data(SOCKET socket,uint64_t size) {	
+unique_ptr<const char> recieve_data(SOCKET socket,uint64_t size) {	
 	
 	uint64_t total_recieved = 0;
 	uint64_t total_needed = size;
 
-	auto read = std::make_unique<char[]>(size);
+	auto read = std::make_unique<char>(size);
 
 	while(total_needed > 0) {												 
 		uint64_t bytes_recieved = recv(socket,read.get()+total_recieved,total_needed,0);
@@ -70,6 +70,7 @@ unique_ptr<const char[]> recieve_data(SOCKET socket,uint64_t size) {
 	return read; 
 }
 
+// Auto destructible things
 void recieve_data(SOCKET socket,void *read,uint64_t size) {	
 	uint64_t total_recieved = 0;
 	uint64_t total_needed = size;
