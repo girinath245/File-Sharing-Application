@@ -3,8 +3,8 @@
 
 #include "network_base.h"
 
-SOCKET make_connection(char *ip,char *port);
-void recieve_file(SOCKET socket_peer);
+SOCKET make_connection(const char *ip,const char *port);
+string recieve_file(SOCKET socket_peer);
 void resume_download(SOCKET socket_peer,const string &filename);
 
 #endif

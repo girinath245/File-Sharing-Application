@@ -1,6 +1,6 @@
 #include "sender.h" 
 
-SOCKET make_connection(char *port) {
+SOCKET make_connection(const char *port) {
     
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
@@ -40,72 +40,69 @@ SOCKET make_connection(char *port) {
     return socket_listen;
 }
 
-void resume_file_send(SOCKET socket_client) {
-	
-	string path = recieve_data(socket_client);
+static void send_file_internal(SOCKET socket_client , const uint64_t position , const string &path) {
+	file streamIn(path , position) ;
 
-	FILE* streamIn = fopen(path.c_str(), "rb");
-	if (streamIn == (FILE *)0) {
-	    printf("File opening error ocurred. Exiting program.\n");
-	    exit(0);
-	}
+    auto size_left = streamIn.size_left() ;
+    if (streamIn.size_left() > 0) send_data(socket_client, &(size_left), sizeof(uint64_t));
+    else return ;
+	
+	cout << "The size of the file which will be sent is " << streamIn.size_left() << " bytes.\n" ;
+
+	while (streamIn.size_left() > 0) 
+    {
+        auto chunk = streamIn.load_region() ; 
+        
+        if (send_data(socket_client, chunk.current_region ,chunk.amount_last_retrieved ) == -1) 
+            std::cerr << "Error occured while sending\n";
+    }
+}
+
+void send_file_formatted(SOCKET socket_client, string &path)
+{
+    string path_proper;
+
+    for (auto c : path)
+    {
+        if (c != '\"' && c != '\'')
+            path_proper += c;
+    }
+
+    int i = path_proper.size() - 1;
+
+    while (i >= 0 && ((path_proper[i] != '\\') && (path_proper[i] != '/')))
+    {
+        i--;
+    }
+
+    string final_filename = path_proper.substr(i + 1, path_proper.length() - i);
+    
+    send_data(socket_client, final_filename);    
+    send_file_internal(socket_client, 0, path_proper);
+}
+
+void resume_file_send(SOCKET socket_client) {
+	string path = recieve_data(socket_client);
 
 	uint64_t position = 0;
 	recieve_data(socket_client,&position,sizeof(uint64_t));
-
-	fseek(streamIn, 0, SEEK_END);
-	uint64_t size_of_file = ftell(streamIn); 
-	fseek(streamIn, 0, SEEK_SET);
-
-	fseek(streamIn,position,SEEK_SET);
-	size_of_file -= position;
-
-	send_data(socket_client,&size_of_file,sizeof(uint64_t));
-	printf("The size of the file which will be sent is %llu bytes.\n",size_of_file);
-	    
-	unsigned char *buf=(unsigned char *)malloc(size_of_file);
-	assert(fread(buf,sizeof(unsigned char),size_of_file,streamIn));
 	   
-	send_data(socket_client,buf,size_of_file);
-	   
-	free(buf);
-	fclose(streamIn);
+	send_file_internal(socket_client,position,path);
 }
 
+
+
 void send_file(SOCKET socket_client) {
-
-	/*
-	printf("Enter the file path \n");
-	char path[120];
-	assert(scanf("%[^\n]s",path));
-	printf("%s" , path);
-
-	send_data(socket_client,path,sizeof(path));
-	*/
-
 	string path ; 
 	getline(cin,path) ;
 
-	send_data(socket_client,path);
+    send_file_formatted(socket_client , path) ;
+}
 
-	FILE *streamIn = fopen(path.c_str(), "rb");
-		if (streamIn == (FILE *)0) {
-			printf("File opening error ocurred. Exiting program.\n");
-			exit(0);
-	}
-
-	fseek(streamIn, 0, SEEK_END);
-	uint64_t size_of_file = ftell(streamIn); 
-	fseek(streamIn, 0, SEEK_SET);
-
-	send_data(socket_client,&size_of_file,sizeof(uint64_t));
-	printf("The size of the file which will be sent is %llu bytes.\n",size_of_file);
-	
-	unsigned char *buf = (unsigned char *) malloc(size_of_file);
-	assert(fread(buf,sizeof(unsigned char),size_of_file,streamIn));
-	
-	send_data(socket_client,buf,size_of_file);
-	
-	free(buf);
-	fclose(streamIn);
+void send_files(SOCKET socket_client , const vector<string> &file_lists)
+{
+    for (auto file : file_lists)
+    {
+        send_file_formatted(socket_client , file) ;
+    }
 }
