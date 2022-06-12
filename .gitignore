@@ -1,0 +1,10 @@
+*.exe
+*.mp4
+*.jpg
+*.jpeg
+*.mp3
+*.txt
+*.o
+.vscode
+learn_thread.cpp
+Test
