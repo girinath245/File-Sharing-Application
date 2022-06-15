@@ -5,6 +5,7 @@
 #include <future>
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 struct chunk
 {

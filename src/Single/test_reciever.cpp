@@ -17,9 +17,15 @@ int main(int argc, char *argv[])
 
     vector<string> paths =
     {
+    #if defined(_WIN32)
         "D:\\Movies and Tv\\sample\\Demon Slayer.mkv",
         "D:\\Movies and Tv\\sample\\Eternals.2021.720p.WEBRip.x264.AAC-[YTS.MX].mp4",
         "D:\\Movies and Tv\\sample\\Nobody.2021.1080p.WEBRip.x264.AAC5.1-[YTS.MX].mp4"
+    #else
+        "/media/girinath/Data/Movies and Tv/sample/Demon Slayer.mkv", 
+        "/media/girinath/Data/Movies and Tv/sample/Eternals.2021.720p.WEBRip.x264.AAC-[YTS.MX].mp4",
+        "/media/girinath/Data/Movies and Tv/sample/Nobody.2021.1080p.WEBRip.x264.AAC5.1-[YTS.MX].mp4"
+    #endif
     };
 
     for (auto path : paths)

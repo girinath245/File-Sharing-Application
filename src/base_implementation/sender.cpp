@@ -41,20 +41,27 @@ SOCKET make_connection(const char *port) {
 }
 
 static void send_file_internal(SOCKET socket_client , const uint64_t position , const string &path) {
-	file streamIn(path , position) ;
-
-    auto size_left = streamIn.size_left() ;
-    if (streamIn.size_left() > 0) send_data(socket_client, &(size_left), sizeof(uint64_t));
-    else return ;
-	
-	cout << "The size of the file which will be sent is " << streamIn.size_left() << " bytes.\n" ;
-
-	while (streamIn.size_left() > 0) 
-    {
-        auto chunk = streamIn.load_region() ; 
+	try {
+        file streamIn(path , position) ;
         
-        if (send_data(socket_client, chunk.current_region ,chunk.amount_last_retrieved ) == -1) 
-            std::cerr << "Error occured while sending\n";
+        auto size_left = streamIn.size_left() ;
+        
+        if (streamIn.size_left() > 0) send_data(socket_client, &(size_left), sizeof(uint64_t));
+        else return ;
+        
+        cout << "The size of the file which will be sent is " << streamIn.size_left() << " bytes.\n" ;
+
+        while (streamIn.size_left() > 0) 
+        {
+            auto chunk = streamIn.load_region() ; 
+            
+            if (send_data(socket_client, chunk.current_region ,chunk.amount_last_retrieved ) == -1) 
+                std::cerr << "Error occured while sending\n";
+        }
+    }
+    
+    catch( const std::exception & ex ) {
+       std::cerr << ex.what() << endl;
     }
 }
 

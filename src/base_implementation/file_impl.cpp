@@ -8,8 +8,9 @@ file::file(const std::string &path, uint64_t position )
     std::cout << filename << std::endl;
     f_ptr = fopen(filename.c_str(), "rb");
 
-    if (f_ptr == (FILE*)0)
-        std::cerr << "Error occured while opening the file\n";
+    if (f_ptr == (FILE*)0) {
+        throw std::runtime_error("Unable to open the file " + filename);
+    }
 
     remaining_file_size_to_be_sent = this->size() - position ;
 

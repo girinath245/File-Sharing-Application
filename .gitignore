@@ -13,6 +13,11 @@ learn_file.cpp
 Test
 
 a
-test
+test_recieve
+test_sender
+
+sender
+recieve
+
 multi_recieve
 multi_send 
