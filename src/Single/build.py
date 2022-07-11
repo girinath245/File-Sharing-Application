@@ -1,6 +1,7 @@
 import os
 import sys
 
+## Make vs Python
 
 def build_release():
 
@@ -71,8 +72,6 @@ def test() :
             "\"D:\\Movies and Tv\\sample\\Eternals.2021.720p.WEBRip.x264.AAC-[YTS.MX].mp4\"",
             "\"D:\\Movies and Tv\\sample\\Nobody.2021.1080p.WEBRip.x264.AAC5.1-[YTS.MX].mp4\""
         ] 
-
-    
 
     i = 0 
 

@@ -2,33 +2,113 @@
 
 using namespace std;
 
-int main() 
+struct Timer 
 {
+    decltype(std::chrono::steady_clock::now()) start ;
+    Timer() 
+    {
+        start = std::chrono::steady_clock::now();
+    }
     
-    string path ;
-    getline(cin, path) ; 
+    double getTime() 
+    {
+        auto end = std::chrono::steady_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - start; 
+        return elapsed_seconds.count() ; 
+    }
+};
+
+double new_approach()
+{
+    string path = "new.txt";
+
     file f(path);
 
-    FILE *w = fopen("new.mp4","wb") ;
+    FILE *w = fopen("new_made_by_c++.txt", "wb");
 
-    cout << f.size_left()  << endl;
-
-        int i = 1 ;
-        while (f.size_left() > 0)
-    {   
-        auto chunk  = f.load_region() ;
-        //cout << "The value is " << chunk.amount_last_retrieved << endl ;
+    double sum = 0 ; int avg_count = 0 ;
+    while (f.size_left() > 0)
+    {
+        chunk chunkp;
+        {
+            Timer t ;
+            chunkp = f.load_region();
+            sum += t.getTime() ;
+            avg_count++;
+        }
         
-        fwrite(chunk.current_region, sizeof(unsigned char), chunk.amount_last_retrieved, w);
+        // cout << "The value is " << chunk.amount_last_retrieved << endl ;
+
+        fwrite(chunkp.current_region, sizeof(unsigned char), chunkp.amount_last_retrieved, w);
 
         // fseek(w, 0L, SEEK_END);
-
-        i++;
     }
 
-    cout << i << endl ;
-    
-    return 0 ;
+    fclose(w) ;
+    cout << sum / avg_count << endl;
+
+    return sum / avg_count ;
 }
 
-// 1180424028
+double old_approach()
+{
+    const int64_t region_size = 10 * 1024 * 1024; 
+
+    FILE *f = fopen("new.txt" , "rb") ;
+
+    FILE *w = fopen("new_made_by_c++.txt", "wb");
+
+    fseek(f, 0, SEEK_END);
+    int64_t file_size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    auto region = malloc(region_size) ;
+
+    double sum = 0 ; int avg_count = 0 ;
+    while (file_size > 0) 
+    {
+        chunk chunkp;
+        {
+            Timer t ;
+            fread(region, sizeof(unsigned char), std::min(region_size, file_size), f) ;
+            sum += t.getTime() ;
+            avg_count++;
+        }
+        
+        fwrite(region, sizeof(unsigned char), std::min(region_size, file_size), w);
+
+        file_size -= region_size ;
+    }
+
+    fclose(w) ;
+
+    cout << sum / avg_count << endl;
+
+    return sum / avg_count ;
+}
+
+int main()
+{
+    double gains = 0 ;
+    double hgain = -10000 ;
+    int total_instances = 5 ;
+
+    for (int i = 1 ; i <= total_instances ; i++) {
+        cout << "\nNew Approach:  " ;
+        auto n = new_approach() ;
+
+        cout << "Olds Approach:  " ;
+        auto o = old_approach() ;
+
+        cout << "Test Number " << i  << ": " << o / n << endl ;
+
+        gains += o / n ;
+        hgain = max (hgain  , o / n) ;
+    }
+
+    cout << "\nHighest Gain is " << hgain << endl ;
+    cout << "Mean Gain is " << gains / total_instances << endl ;
+    
+    return 0;
+
+}
